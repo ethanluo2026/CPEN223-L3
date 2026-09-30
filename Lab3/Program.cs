@@ -1,6 +1,6 @@
 // Lab 3
-// Student name:
-// Student number:
+// Student name:Yuhe Luo
+// Student number:83212530
 
 using System;
 using System.Collections.Generic;
@@ -22,24 +22,88 @@ public static class SensorAnalyzer
     public static bool IsUsableReading(
         double reading, double minimum, double maximum)
     {
-        throw new NotImplementedException();
+        if(!double.IsFinite(minimum)||
+           !double.IsFinite(maximun)||
+           minimum > maximum)
+        {throw new ArguemntException();
+        }
+        return double.IsFinite(reading)
+        && reading>=minimum
+        && reading<=maximun;
     }
 
     public static List<double> CleanReadings(
         IReadOnlyList<double> readings, double minimum, double maximum)
     {
-        throw new NotImplementedException();
+        if (readings == null ||
+            !double.IsFinite(minimum) ||
+            !double.IsFinite(maximum) ||
+            minimum > maximum)
+        {
+            throw new ArgumentException();
+        }
+
+        List<double> result = new List<double>();
+
+        foreach (double reading in readings)
+        {
+            if (IsUsableReading(reading, minimum, maximum))
+            {
+                result.Add(reading);
+            }
+        }
+        return result;
     }
 
     public static bool ContainsApproximately(
         IReadOnlyList<double> readings, double target, double tolerance)
     {
-        throw new NotImplementedException();
+        if (readings == null ||
+            !double.IsFinite(target) ||
+            !double.IsFinite(tolerance) ||
+            tolerance < 0)
+        {
+            throw new ArgumentException();
+        }
+        foreach (double reading in readings)
+        {
+            if (double.IsFinite(reading) &&
+                Math.Abs(reading - target) <= tolerance)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static List<double> MovingAverage(
         IReadOnlyList<double> readings, int windowSize)
     {
-        throw new NotImplementedException();
+        if (readings == null || windowSize <= 0)
+        {
+            throw new ArgumentException();
+        }
+        foreach (double reading in readings)
+        {
+            if (!double.IsFinite(reading))
+            {
+                throw new ArgumentException();
+            }
+        }
+        List<double> result = new List<double>();
+        if (windowSize > readings.Count)
+        {
+            return result;
+        }
+        for (int i = 0; i <= readings.Count - windowSize; i++)
+        {
+            double sum = 0.0;
+            for (int j = 0; j < windowSize; j++)
+            {
+                sum += readings[i + j];
+            }
+            result.Add(sum / windowSize);
+        }
+        return result;
     }
 }
